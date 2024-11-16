@@ -15,11 +15,18 @@ contract Forwarder {
     address payable public constant SUPERCHAIN_WETH_TOKEN = payable(0x4200000000000000000000000000000000000024);
 
     error InvalidCaller();
+    error NoBalance();
 
     function forwardSend(address _sender, address _token, uint256 _amount, uint256 _chainId) public {
-        if (msg.sender != CROSS_DOMAIN_MESSENGER) {
-            revert InvalidCaller();
+        // if (msg.sender != CROSS_DOMAIN_MESSENGER) {
+        //     revert InvalidCaller();
+        // }
+        if (ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).balanceOf(_sender) < _amount) {
+            // podría enviar un mensaje a chain A avisando
+            revert NoBalance();
         }
+        // si no tiene fondos, llamar a otra chain
+        ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).transferFrom(_sender, address(this), _amount);
         ISuperchainTokenBridge(SUPERCHAIN_TOKEN_BRIDGE).sendERC20(_token, _sender, _amount, _chainId);
     }
 }

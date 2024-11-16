@@ -23,16 +23,16 @@ contract ForwarderInteractions is Script {
 
     function approveForwarder() public {
         vm.startBroadcast(privateKey);
-        (bool success,) = payable(SUPERCHAIN_WETH_TOKEN).call{value: 1 ether}("");
+        (bool success,) = payable(SUPERCHAIN_WETH_TOKEN).call{value: 2 ether}("");
         require(success, "Transfer failed!");
 
-        // ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).approve(address(forwarder), 1 ether);
+        ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).approve(address(forwarder), 2 ether);
         // console.log(
         //     "CHAIN 2: allowance ",
         //     ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).allowance(vm.addr(privateKey), address(forwarder))
         // );
         // forwarder.transferFromUser(vm.addr(privateKey), 1 ether);
-        ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).transfer(address(forwarder), 1 ether);
+        // ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).transfer(address(forwarder), 1 ether);
 
         vm.stopBroadcast();
     }

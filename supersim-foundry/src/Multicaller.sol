@@ -45,4 +45,14 @@ contract Multicaller is Ownable {
             emit MessageSent(targetContracts[i], amounts[i], chainIds[i]);
         }
     }
+
+    function oneCall(uint256 chainIdDst, address forwarder, uint256 amount) external {
+        bytes memory sendMessage = abi.encodeWithSignature(
+            "forwardSend(address,address,uint256,uint256)", msg.sender, superWeth, amount, block.chainid
+        );
+
+        IL2ToL2CrossDomainMessenger(messenger).sendMessage(chainIdDst, forwarder, sendMessage);
+
+        emit MessageSent(forwarder, amount, chainIdDst);
+    }
 }

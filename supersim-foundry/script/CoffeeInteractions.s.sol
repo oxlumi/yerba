@@ -29,12 +29,17 @@ contract CoffeeInteractions is Script {
     address[] public targetContracts;
     uint256[] public amounts;
 
-    function multicallForwarders() public {
+    // function multicallForwarders() public {
+    //     vm.startBroadcast(privateKey);
+    //     chainIds.push(CHAINID_2);
+    //     targetContracts.push(address(forwarder));
+    //     amounts.push(2 ether);
+    //     multicaller.multicallForwarders(chainIds, targetContracts, amounts);
+    //     vm.stopBroadcast();
+    // }
+    function oneCallForwarder() public {
         vm.startBroadcast(privateKey);
-        chainIds.push(CHAINID_2);
-        targetContracts.push(address(forwarder));
-        amounts.push(2 ether);
-        multicaller.multicallForwarders(chainIds, targetContracts, amounts);
+        multicaller.oneCall(CHAINID_2, address(forwarder), 2 ether);
         vm.stopBroadcast();
     }
 
@@ -43,6 +48,7 @@ contract CoffeeInteractions is Script {
         (bool success,) = payable(SUPERCHAIN_WETH_TOKEN).call{value: 3 ether}("");
         require(success, "Transfer failed!");
 
+        console.log("before coffee: ", ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).balanceOf(address(vm.addr(privateKey))));
         ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).approve(address(coffeeShop), 5 ether);
 
         coffeeShop.buyCoffee();
@@ -63,14 +69,10 @@ contract CoffeeInteractions is Script {
             "weth balance before: ", ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).balanceOf(address(vm.addr(privateKey)))
         );
 
-        multicallForwarders();
-        console.log(
-            "weth balance after: ", ISuperchainWETH(SUPERCHAIN_WETH_TOKEN).balanceOf(address(vm.addr(privateKey)))
-        );
-
-        vm.warp(200);
-        buyCoffee();
+        oneCallForwarder();
 
         console.log("coffee balance: ", coffeeShop.balanceOf(vm.addr(privateKey)));
+
+        buyCoffee();
     }
 }
