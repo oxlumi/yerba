@@ -2,12 +2,13 @@
 pragma solidity 0.8.25;
 
 import {Script} from "lib/forge-std/src/Script.sol";
+import {console} from "lib/forge-std/src/Console.sol";
 import {ISuperchainTokenBridge} from "optimism/packages/contracts-bedrock/src/L2/interfaces/ISuperchainTokenBridge.sol";
 import {ISuperchainWETH} from "optimism/packages/contracts-bedrock/src/L2/interfaces/ISuperchainWETH.sol";
 
 contract SupersimInteractions is Script {
     address public constant SUPERCHAIN_TOKEN_BRIDGE = 0x4200000000000000000000000000000000000028;
-    address public constant SUPERCHAIN_WETH_TOKEN = 0x4200000000000000000000000000000000000024;
+    address payable public constant SUPERCHAIN_WETH_TOKEN = payable(0x4200000000000000000000000000000000000024);
     uint256 private privateKey;
 
     function mintWETH() public {
@@ -31,7 +32,7 @@ contract SupersimInteractions is Script {
 
     function run() public {
         privateKey = vm.envUint("ANVIL_ACCOUNT1_PRIVATE_KEY");
-        mintWETH(); // Commented out since we've already minted
+        mintWETH();
         sendWETHToOtherChain(1 ether); // Transfer 1 WETH to Chain B
     }
 }
