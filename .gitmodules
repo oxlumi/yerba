@@ -1,0 +1,3 @@
+[submodule "yerba-app"]
+	path = yerba-app
+	url = https://github.com/oxlumi/yerba-app
