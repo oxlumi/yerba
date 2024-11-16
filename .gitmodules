@@ -1,0 +1,3 @@
+[submodule "supersim-foundry/lib/openzeppelin-contracts"]
+	path = supersim-foundry/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
