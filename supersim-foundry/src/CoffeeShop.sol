@@ -8,7 +8,7 @@ contract CoffeeShop is ERC721 {
     uint256 public coffeeId;
 
     address payable public wethToken;
-    uint256 immutable coffeePrice = 0.01 ether;
+    uint256 immutable coffeePrice = 5 ether;
 
     event CoffeeBought(address buyer, uint256 coffeId);
 

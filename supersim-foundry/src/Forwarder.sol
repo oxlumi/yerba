@@ -2,6 +2,7 @@
 pragma solidity 0.8.25;
 
 import {ISuperchainTokenBridge} from "optimism/packages/contracts-bedrock/src/L2/interfaces/ISuperchainTokenBridge.sol";
+import {ISuperchainWETH} from "optimism/packages/contracts-bedrock/src/L2/interfaces/ISuperchainWETH.sol";
 
 /**
  * @notice this contract receives a call from the base chain and calls the SuperchainTokenBridge's sendERC20()
@@ -11,6 +12,7 @@ import {ISuperchainTokenBridge} from "optimism/packages/contracts-bedrock/src/L2
 contract Forwarder {
     address public constant SUPERCHAIN_TOKEN_BRIDGE = 0x4200000000000000000000000000000000000028;
     address public constant CROSS_DOMAIN_MESSENGER = 0x4200000000000000000000000000000000000023;
+    address payable public constant SUPERCHAIN_WETH_TOKEN = payable(0x4200000000000000000000000000000000000024);
 
     error InvalidCaller();
 

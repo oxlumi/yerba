@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity >=0.8.4 <0.9.0;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.25;
 
 import {Script} from "forge-std/Script.sol";
 import {console} from "forge-std/console.sol";
@@ -10,13 +10,15 @@ import {Multicaller} from "../src/Multicaller.sol";
 contract Deploy is Script {
     address deployer;
     CoffeeShop internal coffeeShop;
+    Forwarder internal forwarder;
+    Multicaller internal multicaller;
 
     uint256 public DEFAULT_ANVIL_PRIVATE_KEY = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
     address payable public constant SUPERCHAIN_WETH_TOKEN = payable(0x4200000000000000000000000000000000000024);
     address public constant SUPERCHAIN_TOKEN_BRIDGE = 0x4200000000000000000000000000000000000028;
     address public constant CROSS_DOMAIN_MESSENGER = 0x4200000000000000000000000000000000000023;
 
-    function run() external returns (CoffeeShop) {
+    function run() external returns (CoffeeShop, Forwarder, Multicaller) {
         vm.startBroadcast(DEFAULT_ANVIL_PRIVATE_KEY);
 
         deployer = vm.addr(DEFAULT_ANVIL_PRIVATE_KEY);
@@ -28,10 +30,10 @@ contract Deploy is Script {
         forwarder = new Forwarder();
 
         // deploy multicaller
-        multicaller = new Multicaller();
+        multicaller = new Multicaller(CROSS_DOMAIN_MESSENGER, SUPERCHAIN_WETH_TOKEN, SUPERCHAIN_TOKEN_BRIDGE);
 
         vm.stopBroadcast();
 
-        return (coffeeShop);
+        return (coffeeShop, forwarder, multicaller);
     }
 }
