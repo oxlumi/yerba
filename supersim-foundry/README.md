@@ -1,66 +1,32 @@
-## Foundry
+# How to run supersim-foundry:
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+### Step 1: Install Supersim
 
-Foundry consists of:
+- Option1: Homebrew (OS X, Linux):
+  `brew install ethereum-optimism/tap/supersim`
+- Option2: Precompiled Binaries:
+  Download the executable for your platform from the Supersim GitHub releases page.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+### Step 2: Configure your `.env` file:
 
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
+```
+OP1_RPC=http://127.0.0.1:9545
+OP2_RPC=http://127.0.0.1:9546
+ANVIL_ACCOUNT1_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 ```
 
-### Test
+### Step 3: Run supersim with autorelay:
 
-```shell
-$ forge test
-```
+supersim --interop.autorelay
 
-### Format
+### Step 4: deploy contracts on chain OP1:
 
-```shell
-$ forge fmt
-```
+`forge script script/Deploy.s.sol --broadcast --rpc-url ${OP1_RPC}`
 
-### Gas Snapshots
+### Step 5: approve forwarder on chain OP2:
 
-```shell
-$ forge snapshot
-```
+`forge script script/ForwarderInteractions.s.sol --broadcast --rpc-url ${OP2_RPC}`
 
-### Anvil
+### Step 6: buy a coffee:
 
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+`forge script script/CoffeeInteractions.s.sol --broadcast --rpc-url ${OP1_RPC}`
